@@ -98,6 +98,7 @@ http://localhost:8000/api/docs
 
 ### Authorize Token
 
+![Authorize](img/authorize-token-input.png)
 ![Authorize](img/authorize-token.png)
 
 ### Get Current User
