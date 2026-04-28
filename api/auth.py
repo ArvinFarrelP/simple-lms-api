@@ -1,9 +1,10 @@
 from ninja import Router
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from .jwt_utils import create_access_token, create_refresh_token, decode_token
 
 router = Router()
+
+User = get_user_model()
 
 
 @router.post("/register")
@@ -14,7 +15,7 @@ def register(request, username: str, password: str):
 
 @router.post("/login")
 def login(request, username: str, password: str):
-    user = authenticate(username=username, password=password)
+    user = authenticate(request, username=username, password=password)
 
     if not user:
         return {"error": "Invalid credentials"}

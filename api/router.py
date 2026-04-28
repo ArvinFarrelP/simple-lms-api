@@ -11,18 +11,21 @@ User = get_user_model()
 
 class AuthBearer(HttpBearer):
     def authenticate(self, request, token):
-        payload = decode_token(token)
-        if payload:
-            try:
-                user = User.objects.get(id=payload["user_id"])
-                return user
-            except User.DoesNotExist:
-                return None
-        return None
+        try:
+            payload = decode_token(token)
+            return User.objects.get(id=payload["user_id"])
+        except:
+            return None
 
 
-api = NinjaAPI(title="Simple LMS API", auth=AuthBearer())
+api = NinjaAPI(
+    title="Simple LMS API",
+    auth=AuthBearer()  # 👈 balik lagi global auth
+)
 
-api.add_router("/auth/", auth_router)
+# 🔓 override auth khusus auth router
+api.add_router("/auth/", auth_router, auth=None)
+
+# 🔒 tetap protected
 api.add_router("/courses/", course_router)
 api.add_router("/enrollments/", enrollment_router)
